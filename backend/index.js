@@ -1,9 +1,9 @@
 const express = require('express');
-const cors = require('cors');
+const cors = require('cors'); // 1. On appelle le module
 const app = express();
 
-app.use(cors()); 
-app.use(express.json()); 
+app.use(cors()); // 2. On dit à l'appli de l'utiliser (IMPORTANT)
+app.use(express.json());
 
 // --- 1. NOTRE PETIT CARNET DE NOTES (BASE DE DONNÉES TEMPORAIRE) ---
 let reservations = [
