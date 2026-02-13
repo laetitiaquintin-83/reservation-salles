@@ -2,19 +2,37 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 
-app.use(cors()); // Autorise le frontend à appeler le backend
-app.use(express.json()); // Permet de lire les données JSON envoyées par le formulaire
+app.use(cors()); 
+app.use(express.json()); 
 
-// Une petite route pour tester si ça marche
+// --- 1. NOTRE PETIT CARNET DE NOTES (BASE DE DONNÉES TEMPORAIRE) ---
+let reservations = [
+    { id: 1, room: 'Salle Atlas', hour: '09:00', user: 'Jean Admin' }
+];
+
+// --- 2. LES ROUTES (LES CHEMINS) ---
+
+// Route de test
 app.get('/api', (req, res) => {
     res.json({ message: "Le serveur TechSpace est en ligne ! 🚀" });
 });
 
-// Route de Login "Simulée" (pour tester ton bouton sans BDD pour l'instant)
+// Route pour VOIR les réservations
+app.get('/api/reservations', (req, res) => {
+    res.json(reservations);
+});
+
+// Route pour CRÉER une réservation
+app.post('/api/reservations', (req, res) => {
+    const newBooking = req.body;
+    reservations.push(newBooking); // On l'ajoute au carnet
+    res.status(201).json(newBooking);
+});
+
+// Route de Login
 app.post('/api/login', (req, res) => {
     const { email, password } = req.body;
 
-    // Test simple : si c'est admin@techspace.com et password123
     if (email === 'admin@techspace.com' && password === 'password123') {
         res.json({
             token: 'fake-jwt-token',
@@ -25,6 +43,7 @@ app.post('/api/login', (req, res) => {
     }
 });
 
+// --- 3. DÉMARRAGE ---
 const PORT = 5000;
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
