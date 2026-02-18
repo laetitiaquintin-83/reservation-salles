@@ -10,4 +10,19 @@ const pool = mysql.createPool({
     queueLimit: 0
 });
 
-module.exports = pool.promise();
+const db = pool.promise();
+
+// --- AJOUT SECTION 4.2 LOGGING ---
+// Test de connexion immédiat pour éviter de découvrir un bug en plein oral
+db.getConnection()
+    .then(connection => {
+        console.log(" [INFO] Connexion MySQL établie avec succès (techspace_db)");
+        connection.release();
+    })
+    .catch(err => {
+        console.error(" [ERROR] Impossible de se connecter à MySQL !");
+        console.error(" Détails :", err.message);
+        console.log("💡 Vérifie que Laragon est bien lancé et que la BDD 'techspace_db' existe.");
+    });
+
+module.exports = db;
